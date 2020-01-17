@@ -3,14 +3,10 @@ import requests
 
 import sys
 
-from uuid import uuid4
-
 from timeit import default_timer as timer
 
-from proofstatus import ProofStatus
 
-
-def proof_of_work(last_proof, node):
+def proof_of_work(last_proof):
     """
     Multi-Ouroboros of Work Algorithm
     - Find a number p' such that the last six digits of hash(p) are equal
@@ -24,10 +20,10 @@ def proof_of_work(last_proof, node):
     start = timer()
 
     print("\nSearching for next proof")
-    proof = uuid4().int
-    with ProofStatus(node + "/last_proof") as p:
-        while valid_proof(last_proof, proof) is False and not p.done:
-            proof = uuid4().int
+    proof = last_proof * 2
+    while valid_proof(last_proof, proof) is False and timer() - start < 2:
+        proof += 1
+
     if valid_proof(last_proof, proof):
         print("Proof found: " + str(proof) + " in " + str(timer() - start))
         return proof
@@ -73,7 +69,7 @@ if __name__ == '__main__':
         # Get the last proof from the server
         r = requests.get(url=node + "/last_proof")
         data = r.json()
-        new_proof = proof_of_work(data.get('proof'), node)
+        new_proof = proof_of_work(data.get('proof'))
 
         if new_proof:
             post_data = {"proof": new_proof, "id": id}
