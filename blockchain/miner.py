@@ -1,4 +1,5 @@
 import hashlib
+import requests
 
 import sys
 
@@ -6,7 +7,7 @@ from uuid import uuid4
 
 from timeit import default_timer as timer
 
-import random
+from random import uniform
 
 
 def proof_of_work(last_proof):
@@ -19,17 +20,19 @@ def proof_of_work(last_proof):
     - Use the same method to generate SHA-256 hashes as the examples in class
     """
 
+    print("Last proof:", last_proof)
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
+    proof = int(uniform(0, 1.8446744e+19))  # Random num between 0 and 2^64
+    while valid_proof(last_proof, proof) is False:
+        proof = int(uniform(0, 1.8446744e+19))
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
 
-def valid_proof(last_hash, proof):
+def valid_proof(last_proof, proof):
     """
     Validates the Proof:  Multi-ouroborus:  Do the last six characters of
     the hash of the last proof match the first six characters of the hash
@@ -38,8 +41,20 @@ def valid_proof(last_hash, proof):
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
 
-    # TODO: Your code here!
-    pass
+    # print(last_proof, proof)
+
+    # last_hash = hashlib.sha256(last_proof.encode()).hexdigest()
+    # guess_hash = hashlib.sha256(proof.encode()).hexdigest()
+    last_hash = hashlib.sha256(str(last_proof).encode()).hexdigest()
+    guess_hash = hashlib.sha256(str(proof).encode()).hexdigest()
+
+    if guess_hash[:6] == last_hash[-6:]:
+        print(last_proof, last_hash)
+        print(proof, guess_hash)
+        print
+        return True
+    else:
+        return False
 
 
 if __name__ == '__main__':
