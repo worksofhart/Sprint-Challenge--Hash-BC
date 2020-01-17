@@ -4,6 +4,7 @@ import requests
 import sys
 
 from timeit import default_timer as timer
+from random import randint
 
 
 def proof_of_work(last_proof):
@@ -20,9 +21,10 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("\nSearching for next proof")
-    proof = last_proof * 2
-    while valid_proof(last_proof, proof) is False and timer() - start < 2:
-        proof += 1
+    offset = randint(-1E+19,1E+19)
+    proof = last_proof + offset
+    while valid_proof(last_proof, proof) is False and timer() - start < 2.5:
+        proof += offset
 
     if valid_proof(last_proof, proof):
         print("Proof found: " + str(proof) + " in " + str(timer() - start))
