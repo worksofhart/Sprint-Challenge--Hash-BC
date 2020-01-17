@@ -24,14 +24,17 @@ def proof_of_work(last_proof, node):
     print("Last proof:", last_proof)
     start = timer()
 
-    print("Searching for next proof")
-    proof = int(uniform(0, 1.8446744e+19))  # Random num between 0 and 2^64
+    print("\nSearching for next proof")
+    proof = uniform(0, 1.8446744e+19)  # Random num between 0 and 2^64
     with ProofStatus(node + "/last_proof") as p:
         while valid_proof(last_proof, proof) is False and not p.done:
-            proof = int(uniform(0, 1.8446744e+19))
-    
-    print("Proof found: " + str(proof) + " in " + str(timer() - start))
-    return proof if valid_proof(last_proof, proof) else False
+            proof = uniform(0, 1.8446744e+19)
+
+    if valid_proof(last_proof, proof):
+        print("Proof found: " + str(proof) + " in " + str(timer() - start))
+        return proof
+
+    return None
 
 
 def valid_proof(last_proof, proof):
@@ -91,3 +94,5 @@ if __name__ == '__main__':
                 print("Total coins mined: " + str(coins_mined))
             else:
                 print(data.get('message'))
+
+        print
