@@ -29,6 +29,7 @@ class ProofStatus():
                 print(r)
                 break
             if data['proof'] != self.last_proof:
+                print("New block detected... aborting")
                 self.finished = True
             else:
                 time.sleep(self.delay)

@@ -49,13 +49,7 @@ def valid_proof(last_proof, proof):
     last_hash = hashlib.sha256(str(last_proof).encode()).hexdigest()
     guess_hash = hashlib.sha256(str(proof).encode()).hexdigest()
 
-    if guess_hash[:6] == last_hash[-6:]:
-        print(last_proof, last_hash)
-        print(proof, guess_hash)
-        print
-        return True
-    else:
-        return False
+    return guess_hash[:6] == last_hash[-6:]
 
 
 if __name__ == '__main__':
