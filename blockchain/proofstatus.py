@@ -7,11 +7,13 @@ from random import uniform
 
 class ProofStatus():
     """
-    Set up a thread to ping the server and see if any new blocks have been mined since last check.
-    If so, set done to True to alert proof of work function to abort and start mining a new block.
+    Set up a thread to ping the server and see if any
+    new blocks have been mined since last check. If so,
+    set done to True to alert proof of work function to
+    abort and start mining a new block.
     """
     finished = False
-    delay = 2
+    delay = 1
 
     def __init__(self, node="http://localhost:5000/chain", delay=None):
         if delay and float(delay):
